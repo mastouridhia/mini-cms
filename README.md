@@ -12,6 +12,18 @@ Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication 
 - Vues Blade : `bienvenue`, `heure` et `a-propos`.
 - Base de données SQLite locale (`database/database.sqlite`, non versionnée).
 
+## Routes disponibles
+
+| Méthode | URI | Réponse |
+|---|---|---|
+| GET | `/` | Vue `welcome` |
+| GET | `/bonjour` | Message de bienvenue en texte brut |
+| GET | `/bonjour-court` | Message de bienvenue en texte brut, avec une fonction fléchée |
+| GET | `/bienvenue` | Vue `bienvenue` avec le nom de l'étudiant, le groupe et le cours |
+| GET | `/a-propos` | Vue `a-propos` avec le nom de l'auteur et le groupe |
+| GET | `/heure` | Heure actuelle |
+
+
 ## Prérequis
 
 - PHP et Composer (PHP 8.3 ou plus depuis https://www.php.net/downloads, avec les extensions curl, fileinfo, mbstring, openssl, pdo_sqlite, sqlite3 et zip activées dans php.ini, et Composer depuis https://getcomposer.org).
