@@ -19,3 +19,9 @@ Route::get('/bienvenue', function () {
         'cours' => 'Atelier Framework Côté Serveur',
     ]);
 });
+Route::get('/a-propos', function () {
+    return view('a-propos', [
+        'auteur' => 'Mastouri Dhia',
+        'groupe' => 'MDW33',
+    ]);
+});
