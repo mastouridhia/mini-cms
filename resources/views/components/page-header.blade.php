@@ -1,3 +1,8 @@
-<div>
-    <!-- Act only according to that maxim whereby you can, at the same time, will that it should become a universal law. - Immanuel Kant -->
+@props(['title', 'subtitle' => null])
+
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900">{{ $title }}</h1>
+    @if ($subtitle)
+        <p class="mt-2 text-sm text-gray-600">{{ $subtitle }}</p>
+    @endif
 </div>

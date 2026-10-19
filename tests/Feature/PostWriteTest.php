@@ -28,6 +28,12 @@ it('creates a post from the form', function () {
     ]);
 });
 
+it('shows the create form', function () {
+    $this->get(route('posts.create'))
+        ->assertOk()
+        ->assertSee('Créer l’article');
+});
+
 it('does not create a post without a title', function () {
     $this->post(route('posts.store'), postData(['title' => '']))
         ->assertRedirect();
@@ -36,11 +42,19 @@ it('does not create a post without a title', function () {
 });
 
 it('shows the edit form with the current values', function () {
-    $post = Post::create(postData(['title' => 'Titre initial']));
+    $post = Post::create(postData([
+        'title' => 'Titre initial',
+        'excerpt' => 'Extrait initial',
+        'body' => 'Corps initial suffisamment long pour être validé.',
+    ]));
 
     $this->get(route('posts.edit', $post))
         ->assertOk()
-        ->assertSee('Titre initial');
+        ->assertSee('Modifier l’article')
+        ->assertSee('value="Titre initial"', false)
+        ->assertSee('value="article-de-test"', false)
+        ->assertSee('Extrait initial')
+        ->assertSee('Corps initial suffisamment long pour être validé.');
 });
 
 it('updates a post and keeps its own slug', function () {
@@ -76,6 +90,17 @@ it('deletes a post', function () {
         ->assertRedirect(route('posts.index'));
 
     $this->assertDatabaseMissing('posts', ['id' => $post->id]);
+});
+
+it('shows a confirmation before deleting a post', function () {
+    $post = Post::create(postData());
+
+    $this->get(route('posts.show', $post))
+        ->assertOk()
+        ->assertSee('Cette action est définitive', false)
+        ->assertSee('Confirmer la suppression')
+        ->assertSee(route('posts.destroy', $post), false)
+        ->assertSee('value="DELETE"', false);
 });
 
 it('publishes a draft', function () {
