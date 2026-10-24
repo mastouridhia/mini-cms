@@ -11,6 +11,7 @@ class PageController extends Controller
     {
         return view('home', [
             'latestPosts' => Post::published()
+                ->with('user', 'category', 'tags')
                 ->latest('published_at')
                 ->take(3)
                 ->get(),
@@ -20,8 +21,8 @@ class PageController extends Controller
     public function about(): View
     {
         return view('a-propos', [
-            'auteur' => 'Prenom Nom',
-            'groupe' => 'MDW32',
+            'auteur' => 'Mastouri Dhia',
+            'groupe' => 'MDW33',
         ]);
     }
 
