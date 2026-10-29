@@ -20,6 +20,17 @@
         @endforeach
     </ul>
 
+    @if ($tags->isNotEmpty())
+        <h2 class="text-2xl font-bold mb-4">Tags populaires</h2>
+        <ul class="mb-10 flex flex-wrap gap-3" aria-label="Tags populaires">
+            @foreach ($tags as $tag)
+                <li>
+                    <a href="{{ route('posts.tag', $tag) }}" class="inline-block rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700 hover:bg-indigo-100">{{ $tag->name }} ({{ $tag->posts_count }})</a>
+                </li>
+            @endforeach
+        </ul>
+    @endif
+
     <x-alert type="success" title="Sprint en cours">
         Les composants Blade évitent de recopier le même code HTML dans chaque page.
     </x-alert>
