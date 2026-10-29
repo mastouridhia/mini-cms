@@ -1,4 +1,4 @@
-@props(['post' => null])
+@props(['post' => null, 'categories'])
 
 <form method="POST" action="{{ $post ? route('posts.update', $post) : route('posts.store') }}" class="max-w-2xl space-y-5">
     @csrf
@@ -34,6 +34,19 @@
         <label for="body" class="mb-1 block text-sm font-medium text-gray-700">Contenu</label>
         <textarea id="body" name="body" rows="8" required class="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">{{ old('body', $post?->body) }}</textarea>
         @error('body')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label for="category_id" class="mb-1 block text-sm font-medium text-gray-700">Catégorie</label>
+        <select id="category_id" name="category_id" class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            <option value="">Aucune catégorie</option>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}" @selected(old('category_id', $post?->category_id) == $category->id)>{{ $category->name }}</option>
+            @endforeach
+        </select>
+        @error('category_id')
             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
         @enderror
     </div>
