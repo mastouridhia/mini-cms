@@ -50,4 +50,23 @@ class Post extends Model
     {
         $query->where('is_published', true);
     }
+
+    /**
+     * Posts the given user may see: everything for an admin, published posts plus
+     * their own drafts for an author, published posts only for a visitor.
+     */
+    public function scopeVisibleTo(Builder $query, ?User $user): void
+    {
+        if ($user?->isAdmin()) {
+            return;
+        }
+
+        $query->where(function (Builder $query) use ($user) {
+            $query->where('is_published', true);
+
+            if ($user !== null) {
+                $query->orWhere('user_id', $user->id);
+            }
+        });
+    }
 }
