@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+
 beforeEach(function () {
     $this->withoutVite();
 });
@@ -14,7 +16,8 @@ it('shows the styled 404 page inside the site layout', function () {
 it('shows the styled 503 page with the read-only message', function () {
     config(['site.read_only' => true]);
 
-    $this->post(route('admin.categories.store'), ['name' => 'Test', 'slug' => 'test'])
+    $this->actingAs(User::factory()->admin()->create())
+        ->post(route('admin.categories.store'), ['name' => 'Test', 'slug' => 'test'])
         ->assertStatus(503)
         ->assertSee('Service indisponible')
         ->assertSee('Le site est en lecture seule pour le moment.');

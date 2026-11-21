@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Post;
+use App\Models\User;
 
 beforeEach(function () {
     $this->withoutVite();
@@ -45,7 +46,8 @@ it('returns 404 for an unknown post', function () {
 });
 
 it('shows the create form', function () {
-    $this->get(route('posts.create'))
+    $this->actingAs(User::factory()->create())
+        ->get(route('posts.create'))
         ->assertOk()
         ->assertSee('Nouvel article');
 });
