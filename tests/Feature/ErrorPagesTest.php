@@ -28,5 +28,5 @@ it('shows the styled 403 page in French', function () {
         ->get(route('admin.categories.index'))
         ->assertForbidden()
         ->assertSee('Accès refusé')
-        ->assertSee("Vous n'avez pas le droit d'effectuer cette action.", false);
+        ->assertSee("Vous n'avez pas le droit d'effectuer cette action.");
 });
