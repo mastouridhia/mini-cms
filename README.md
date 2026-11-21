@@ -6,15 +6,13 @@ Auteur : Prenom Nom, groupe MDW32.
 
 Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication : pages publiques, back-office authentifié, API JSON et tests Pest. Chaque session se termine par un tag Git (`lab-01`, `lab-01b`, puis un tag par session).
 
-## État actuel (tag lab-06b)
+## État actuel (tag lab-07)
 
-- Middleware `admin` (`EnsureUserIsAdmin`) sur tout `/admin`, enregistré avec `writable` dans un seul appel `alias()` de `bootstrap/app.php`.
-- Gate `manage-tags` utilisé dans `TagController`, dans `StoreTagRequest`/`UpdateTagRequest` et dans le menu (`@can`).
-- `PostPolicy` complète (`view`, `create`, `update`, `delete`) : un brouillon n'est visible que par son auteur et les admins, sur sa page et dans `/posts` (scope `visibleTo()`).
-- `Gate::before` : les admins passent toutes les règles, sauf `changeRole`.
-- Back-office des utilisateurs (`/admin/utilisateurs`) : un admin change le rôle des autres comptes, jamais le sien (`UserPolicy`).
-- Tests Pest : `AdminAccessTest` (7 tests), `PostVisibilityTest` (5 tests), `UserRoleTest` (2 tests) en plus des tests précédents.
-- Section « Comparaison avec le starter kit Livewire » ci-dessous.
+- API installée avec `php artisan install:api` (Laravel Sanctum, `routes/api.php`, table `personal_access_tokens`).
+- Endpoints publics en lecture : `GET /api/posts` (articles publiés, paginés, `per_page` de 1 à 50) et `GET /api/posts/{post}`.
+- Réponses formatées par `PostResource` et `CategoryResource` : dates ISO 8601, relations avec `whenLoaded`, aucun champ sensible (`email`, `role`, `user_id`).
+- Erreurs JSON : 404 (article inconnu), 403 (brouillon, via `PostPolicy`), 422 en français (`IndexPostRequest`).
+- Défi : clé `tags` dans chaque article, clé `body` seulement sur la page d'un article.
 
 ## Comptes de test
 
@@ -61,6 +59,8 @@ Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication 
 | GET | `/mes-articles` | `my-posts` | `PostController@mine` |
 | GET | `/admin/utilisateurs` | `admin.users.index` | `UserController@index` |
 | PATCH | `/admin/utilisateurs/{user}/role` | `admin.users.role` | `UserController@updateRole` |
+| GET | `/api/posts` | `api.posts.index` | `Api\PostController@index` |
+| GET | `/api/posts/{post}` | `api.posts.show` | `Api\PostController@show` |
 
 ## Comparaison avec le starter kit Livewire
 
@@ -182,3 +182,9 @@ Ouvrir ensuite http://localhost:8000 (adresse de l'application, différente de l
 ![Menu d'un auteur sans Catégories ni Tags](screenshots/s12-menu-auteur.png)
 
 ![Back-office des utilisateurs (défi)](screenshots/s12-utilisateurs.png)
+
+### Session 13
+
+![GET /api/posts?per_page=2 : data, links et meta](screenshots/s13-postman-liste.png)
+
+![GET /api/posts?per_page=500 : erreur 422 en français](screenshots/s13-postman-422.png)
