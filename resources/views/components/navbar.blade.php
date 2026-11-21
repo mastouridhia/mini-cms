@@ -7,5 +7,6 @@
         <x-nav-link to="time">Heure</x-nav-link>
         <x-nav-link to="about">À propos</x-nav-link>
         <x-nav-link to="admin.categories.index" match="admin.categories.*">Catégories</x-nav-link>
+        <x-nav-link to="admin.tags.index" match="admin.tags.*">Tags</x-nav-link>
     </nav>
 </header>
