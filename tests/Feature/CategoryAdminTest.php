@@ -81,3 +81,12 @@ it('still lists the categories when the site is read-only', function () {
         ->assertOk()
         ->assertSee('Lisible');
 });
+
+it('shows the category not found page with the available categories', function () {
+    Category::factory()->create(['name' => 'Tutoriels']);
+
+    $this->get('/posts/categorie/inexistante')
+        ->assertNotFound()
+        ->assertSee('Catégorie introuvable')
+        ->assertSee('Tutoriels');
+});

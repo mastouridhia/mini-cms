@@ -27,4 +27,17 @@ class StoreTagRequest extends FormRequest
             'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/', 'unique:tags,slug'],
         ];
     }
+
+    /**
+     * Get the custom messages for the tag form.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'slug.unique' => 'Ce slug est déjà utilisé par un autre tag.',
+            'slug.regex' => 'Le slug ne doit contenir que des minuscules, des chiffres et des tirets.',
+        ];
+    }
 }
