@@ -14,7 +14,7 @@ class PostController extends Controller
     public function index(IndexPostRequest $request): AnonymousResourceCollection
     {
         $posts = Post::published()
-            ->with('user', 'category')
+            ->with('user', 'category', 'tags')
             ->latest('id')
             ->paginate($request->integer('per_page', 5))
             ->withQueryString();
@@ -26,6 +26,6 @@ class PostController extends Controller
     {
         Gate::authorize('view', $post);
 
-        return new PostResource($post->load('user', 'category'));
+        return new PostResource($post->load('user', 'category', 'tags'));
     }
 }
