@@ -8,5 +8,22 @@
         <x-nav-link to="about">À propos</x-nav-link>
         <x-nav-link to="admin.categories.index" match="admin.categories.*">Catégories</x-nav-link>
         <x-nav-link to="admin.tags.index" match="admin.tags.*">Tags</x-nav-link>
+
+        <div class="ml-auto flex items-center gap-2">
+            @auth
+                <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <button type="submit" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">Déconnexion</button>
+                </form>
+            @endauth
+
+            @guest
+                <x-nav-link to="login">Connexion</x-nav-link>
+                <x-nav-link to="register">Inscription</x-nav-link>
+            @endguest
+        </div>
     </nav>
 </header>

@@ -36,5 +36,7 @@
         </div>
 
         <button type="submit" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">Créer mon compte</button>
+
+        <p class="text-sm text-gray-600">Déjà inscrit ? <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">Se connecter</a></p>
     </form>
 </x-layout>
