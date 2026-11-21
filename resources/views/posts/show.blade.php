@@ -29,6 +29,7 @@
 
         <div class="text-gray-800 leading-relaxed whitespace-pre-line">{{ $post->body }}</div>
 
+        @can('update', $post)
         <div class="mt-8 flex flex-wrap items-start gap-4">
             <form method="POST" action="{{ route('posts.publication', $post) }}">
                 @csrf
@@ -51,6 +52,7 @@
                 </form>
             </details>
         </div>
+        @endcan
     </article>
 
     @if ($related->isNotEmpty())
