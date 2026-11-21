@@ -6,14 +6,23 @@ Auteur : Prenom Nom, groupe MDW32.
 
 Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication : pages publiques, back-office authentifié, API JSON et tests Pest. Chaque session se termine par un tag Git (`lab-01`, `lab-01b`, puis un tag par session).
 
-## État actuel (tag lab-05b)
+## État actuel (tag lab-06)
 
-- Back-office des catégories et des tags sous `/admin` (`Route::resource(...)->except('show')`), avec Form Requests et messages flash.
-- Suppression d'une catégorie : ses articles restent, sans catégorie (`nullOnDelete()`).
-- Messages de validation en français (`APP_LOCALE=fr`, `lang/fr/validation.php`, `messages()` dans les Form Requests).
-- Pages d'erreur 404 et 503 affichées dans le layout du site ; pages « Article introuvable » et « Catégorie introuvable ».
-- Aucune validation ni try/catch dans les contrôleurs.
-- Tests Pest : `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest`, `ErrorPagesTest` en plus des tests précédents.
+- Authentification écrite à la main : inscription (`Hash::make()`), connexion (`Auth::attempt()`, régénération de la session, « Se souvenir de moi »), déconnexion (`Auth::logout()`, invalidation de la session).
+- Middlewares `auth` et `guest` : les écritures sont réservées aux utilisateurs connectés, chaque nouvel article est rattaché à son auteur (`$request->user()->posts()->create()`).
+- Colonne `role` (`author` par défaut, `admin`), méthode `User::isAdmin()`, état de fabrique `admin()`.
+- Gate `manage-categories` (back-office des catégories réservé aux admins), utilisé avec `@can` et `Gate::authorize()`.
+- `PostPolicy` : un auteur modifie et supprime ses propres articles, un admin tous les articles.
+- Page « Mes articles » (`/mes-articles`) avec les brouillons de l'auteur connecté.
+- Pages 403, 404 et 503 dans le layout du site.
+- Tests Pest : `AuthTest` (5 tests) et `AuthorizationTest` (10 tests) en plus des tests précédents.
+
+## Comptes de test
+
+| Compte | Mot de passe | Rôle |
+|---|---|---|
+| `test@example.com` | `password` | admin |
+| comptes créés par `DatabaseSeeder` | `password` | author |
 
 ## Routes disponibles
 
@@ -45,6 +54,12 @@ Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication 
 | GET | `/admin/tags/{tag}/edit` | `admin.tags.edit` | `TagController@edit` |
 | PUT | `/admin/tags/{tag}` | `admin.tags.update` | `TagController@update` |
 | DELETE | `/admin/tags/{tag}` | `admin.tags.destroy` | `TagController@destroy` |
+| GET | `/inscription` | `register` | `Auth\RegisterController@create` |
+| POST | `/inscription` | `register.store` | `Auth\RegisterController@store` |
+| GET | `/connexion` | `login` | `Auth\LoginController@create` |
+| POST | `/connexion` | `login.store` | `Auth\LoginController@store` |
+| POST | `/deconnexion` | `logout` | `Auth\LoginController@destroy` |
+| GET | `/mes-articles` | `my-posts` | `PostController@mine` |
 
 ## Prérequis
 
@@ -135,3 +150,9 @@ Ouvrir ensuite http://localhost:8000 (adresse de l'application, différente de l
 ![Page 404 dans le layout du site](screenshots/s10-404.png)
 
 ![Back-office des catégories](screenshots/s10-categories.png)
+
+### Session 11
+
+![Connexion refusée avec le message neutre](screenshots/s11-connexion.png)
+
+![Un auteur reçoit 403 sur le back-office des catégories](screenshots/s11-interdit.png)
