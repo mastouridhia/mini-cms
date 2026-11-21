@@ -9,8 +9,10 @@
         @can('manage-categories')
             <x-nav-link to="admin.categories.index" match="admin.categories.*">Catégories</x-nav-link>
         @endcan
-        @auth
+        @can('manage-tags')
             <x-nav-link to="admin.tags.index" match="admin.tags.*">Tags</x-nav-link>
+        @endcan
+        @auth
             <x-nav-link to="my-posts">Mes articles</x-nav-link>
         @endauth
 
