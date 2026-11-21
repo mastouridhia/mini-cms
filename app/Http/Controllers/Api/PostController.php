@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PostController extends Controller
 {
-    public function index(): LengthAwarePaginator
+    public function index(): AnonymousResourceCollection
     {
-        return Post::published()->with('user')->latest('id')->paginate(5);
+        $posts = Post::published()->latest('id')->paginate(5);
+
+        return PostResource::collection($posts);
     }
 }
