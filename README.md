@@ -6,16 +6,15 @@ Auteur : Prenom Nom, groupe MDW32.
 
 Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication : pages publiques, back-office authentifié, API JSON et tests Pest. Chaque session se termine par un tag Git (`lab-01`, `lab-01b`, puis un tag par session).
 
-## État actuel (tag lab-06)
+## État actuel (tag lab-06b)
 
-- Authentification écrite à la main : inscription (`Hash::make()`), connexion (`Auth::attempt()`, régénération de la session, « Se souvenir de moi »), déconnexion (`Auth::logout()`, invalidation de la session).
-- Middlewares `auth` et `guest` : les écritures sont réservées aux utilisateurs connectés, chaque nouvel article est rattaché à son auteur (`$request->user()->posts()->create()`).
-- Colonne `role` (`author` par défaut, `admin`), méthode `User::isAdmin()`, état de fabrique `admin()`.
-- Gate `manage-categories` (back-office des catégories réservé aux admins), utilisé avec `@can` et `Gate::authorize()`.
-- `PostPolicy` : un auteur modifie et supprime ses propres articles, un admin tous les articles.
-- Page « Mes articles » (`/mes-articles`) avec les brouillons de l'auteur connecté.
-- Pages 403, 404 et 503 dans le layout du site.
-- Tests Pest : `AuthTest` (5 tests) et `AuthorizationTest` (10 tests) en plus des tests précédents.
+- Middleware `admin` (`EnsureUserIsAdmin`) sur tout `/admin`, enregistré avec `writable` dans un seul appel `alias()` de `bootstrap/app.php`.
+- Gate `manage-tags` utilisé dans `TagController`, dans `StoreTagRequest`/`UpdateTagRequest` et dans le menu (`@can`).
+- `PostPolicy` complète (`view`, `create`, `update`, `delete`) : un brouillon n'est visible que par son auteur et les admins, sur sa page et dans `/posts` (scope `visibleTo()`).
+- `Gate::before` : les admins passent toutes les règles, sauf `changeRole`.
+- Back-office des utilisateurs (`/admin/utilisateurs`) : un admin change le rôle des autres comptes, jamais le sien (`UserPolicy`).
+- Tests Pest : `AdminAccessTest` (7 tests), `PostVisibilityTest` (5 tests), `UserRoleTest` (2 tests) en plus des tests précédents.
+- Section « Comparaison avec le starter kit Livewire » ci-dessous.
 
 ## Comptes de test
 
@@ -60,6 +59,8 @@ Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication 
 | POST | `/connexion` | `login.store` | `Auth\LoginController@store` |
 | POST | `/deconnexion` | `logout` | `Auth\LoginController@destroy` |
 | GET | `/mes-articles` | `my-posts` | `PostController@mine` |
+| GET | `/admin/utilisateurs` | `admin.users.index` | `UserController@index` |
+| PATCH | `/admin/utilisateurs/{user}/role` | `admin.users.role` | `UserController@updateRole` |
 
 ## Comparaison avec le starter kit Livewire
 
@@ -173,3 +174,11 @@ Ouvrir ensuite http://localhost:8000 (adresse de l'application, différente de l
 ![Connexion refusée avec le message neutre](screenshots/s11-connexion.png)
 
 ![Un auteur reçoit 403 sur le back-office des catégories](screenshots/s11-interdit.png)
+
+### Session 12
+
+![Un auteur reçoit 403 sur /admin/tags](screenshots/s12-admin-interdit.png)
+
+![Menu d'un auteur sans Catégories ni Tags](screenshots/s12-menu-auteur.png)
+
+![Back-office des utilisateurs (défi)](screenshots/s12-utilisateurs.png)
