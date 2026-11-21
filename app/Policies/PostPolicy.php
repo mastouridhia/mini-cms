@@ -29,11 +29,11 @@ class PostPolicy
     }
 
     /**
-     * An admin edits every post, an author only edits their own posts.
+     * An author only edits their own posts (admins pass through Gate::before).
      */
     public function update(User $user, Post $post): bool
     {
-        return $user->isAdmin() || $user->id === $post->user_id;
+        return $user->id === $post->user_id;
     }
 
     /**
