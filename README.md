@@ -6,13 +6,14 @@ Auteur : Prenom Nom, groupe MDW32.
 
 Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication : pages publiques, back-office authentifié, API JSON et tests Pest. Chaque session se termine par un tag Git (`lab-01`, `lab-01b`, puis un tag par session).
 
-## État actuel (tag lab-05)
+## État actuel (tag lab-05b)
 
-- Validation des articles déplacée dans `StorePostRequest` et `UpdatePostRequest` (`$request->validated()`, slug unique avec `Rule::unique()->ignore()`).
-- Messages flash après chaque écriture (création, modification, suppression, publication), affichés une seule fois par le layout.
-- Middleware `EnsureSiteIsWritable` (alias `writable`) : avec `SITE_READ_ONLY=true`, toute écriture renvoie 503 et un bandeau prévient le visiteur.
-- Page 404 « Article introuvable » sur mesure (callback `render` dans `bootstrap/app.php`), avec les articles récents.
-- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest` et `PostFeedbackTest`.
+- Back-office des catégories et des tags sous `/admin` (`Route::resource(...)->except('show')`), avec Form Requests et messages flash.
+- Suppression d'une catégorie : ses articles restent, sans catégorie (`nullOnDelete()`).
+- Messages de validation en français (`APP_LOCALE=fr`, `lang/fr/validation.php`, `messages()` dans les Form Requests).
+- Pages d'erreur 404 et 503 affichées dans le layout du site ; pages « Article introuvable » et « Catégorie introuvable ».
+- Aucune validation ni try/catch dans les contrôleurs.
+- Tests Pest : `PostFeedbackTest`, `CategoryAdminTest`, `TagAdminTest`, `ErrorPagesTest` en plus des tests précédents.
 
 ## Routes disponibles
 
@@ -32,6 +33,18 @@ Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication 
 | PUT | `/posts/{post}` | `posts.update` | `PostController@update` |
 | DELETE | `/posts/{post}` | `posts.destroy` | `PostController@destroy` |
 | PATCH | `/posts/{post}/publication` | `posts.publication` | `PostController@togglePublication` |
+| GET | `/admin/categories` | `admin.categories.index` | `CategoryController@index` |
+| GET | `/admin/categories/create` | `admin.categories.create` | `CategoryController@create` |
+| POST | `/admin/categories` | `admin.categories.store` | `CategoryController@store` |
+| GET | `/admin/categories/{category}/edit` | `admin.categories.edit` | `CategoryController@edit` |
+| PUT | `/admin/categories/{category}` | `admin.categories.update` | `CategoryController@update` |
+| DELETE | `/admin/categories/{category}` | `admin.categories.destroy` | `CategoryController@destroy` |
+| GET | `/admin/tags` | `admin.tags.index` | `TagController@index` |
+| GET | `/admin/tags/create` | `admin.tags.create` | `TagController@create` |
+| POST | `/admin/tags` | `admin.tags.store` | `TagController@store` |
+| GET | `/admin/tags/{tag}/edit` | `admin.tags.edit` | `TagController@edit` |
+| PUT | `/admin/tags/{tag}` | `admin.tags.update` | `TagController@update` |
+| DELETE | `/admin/tags/{tag}` | `admin.tags.destroy` | `TagController@destroy` |
 
 ## Prérequis
 
@@ -114,3 +127,11 @@ Ouvrir ensuite http://localhost:8000 (adresse de l'application, différente de l
 ![Message flash après la création d'un article](screenshots/s09-message-flash.png)
 
 ![Page Article introuvable avec les articles récents](screenshots/s09-article-introuvable.png)
+
+### Session 10
+
+![Erreurs de validation en français dans le back-office](screenshots/s10-validation.png)
+
+![Page 404 dans le layout du site](screenshots/s10-404.png)
+
+![Back-office des catégories](screenshots/s10-categories.png)
