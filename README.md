@@ -61,6 +61,23 @@ Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication 
 | POST | `/deconnexion` | `logout` | `Auth\LoginController@destroy` |
 | GET | `/mes-articles` | `my-posts` | `PostController@mine` |
 
+## Comparaison avec le starter kit Livewire
+
+| Critère | Mini-CMS (authentification manuelle) | Starter kit Livewire |
+|---|---|---|
+| Routes d'authentification | Écrites à la main dans `routes/web.php` (groupes `guest` et `auth`) | Fournies par Laravel Fortify (`/login`, `/register`, `/logout`...), pages en composants Livewire |
+| Inscription | `Auth\RegisterController` + `RegisterRequest`, `Hash::make()` puis `Auth::login()` | Action Fortify `CreateNewUser` et page Livewire avec Flux |
+| Connexion | `Auth\LoginController@store` : `Auth::attempt()`, `session()->regenerate()`, message neutre | Gérée par Fortify, même principe (tentative, régénération de la session) |
+| Déconnexion | `LoginController@destroy` : `Auth::logout()`, `invalidate()`, `regenerateToken()` | Route `logout` de Fortify |
+| Limitation des tentatives | Aucune | 5 tentatives par minute par e-mail et adresse IP (`FortifyServiceProvider`) |
+| Mot de passe oublié | Absent | `Features::resetPasswords()` : e-mail de réinitialisation (journalisé avec `MAIL_MAILER=log`) |
+| Vérification de l'e-mail | Absente | `Features::emailVerification()` et `MustVerifyEmail` sur `User` |
+| Double authentification | Absente | `Features::twoFactorAuthentication()` (codes TOTP et codes de secours) |
+| Rôles et autorisations | Colonne `role`, `User::isAdmin()`, middleware `EnsureUserIsAdmin`, Gates `manage-categories` et `manage-tags`, `PostPolicy` | Aucun rôle : à ajouter soi-même |
+| Tests | `AuthTest`, `AuthorizationTest`, `AdminAccessTest`, `PostVisibilityTest` écrits à la main | Tests Pest fournis pour l'inscription, la connexion, la réinitialisation et la vérification |
+
+Ce que je garderais du kit dans un vrai projet : la limitation des tentatives de connexion et la réinitialisation du mot de passe, parce qu'elles protègent les comptes et qu'elles sont faciles à mal écrire soi-même. Je garderais en revanche mes propres rôles, mon middleware `admin` et ma `PostPolicy`, puisque le kit ne gère pas les autorisations métier.
+
 ## Prérequis
 
 - PHP et Composer (PHP 8.3 ou plus depuis https://www.php.net/downloads, avec les extensions curl, fileinfo, mbstring, openssl, pdo_sqlite, sqlite3 et zip activées dans php.ini, et Composer depuis https://getcomposer.org).
