@@ -28,4 +28,17 @@ class UpdateCategoryRequest extends FormRequest
             'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/', Rule::unique('categories', 'slug')->ignore($this->route('category'))],
         ];
     }
+
+    /**
+     * Get the custom messages for the category form.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'slug.unique' => 'Ce slug est déjà utilisé par une autre catégorie.',
+            'slug.regex' => 'Le slug ne doit contenir que des minuscules, des chiffres et des tirets.',
+        ];
+    }
 }
