@@ -43,3 +43,27 @@ it('keeps the default 404 page for an unknown category', function () {
         ->assertNotFound()
         ->assertDontSee('Article introuvable');
 });
+
+it('shows a read-only banner and refuses writes when the site is read-only', function () {
+    config(['site.read_only' => true]);
+
+    $this->get(route('posts.index'))
+        ->assertOk()
+        ->assertSee('Site en lecture seule');
+
+    $this->post(route('posts.store'), feedbackPostData())
+        ->assertStatus(503);
+
+    $this->assertDatabaseMissing('posts', ['slug' => 'article-avec-retour']);
+});
+
+it('lists recent published posts on the not found page', function () {
+    $published = Post::factory()->published()->create(['title' => 'Article publié récent']);
+    Post::factory()->create(['title' => 'Brouillon caché']);
+
+    $this->get('/posts/999')
+        ->assertNotFound()
+        ->assertSee('Articles récents')
+        ->assertSee($published->title)
+        ->assertDontSee('Brouillon caché');
+});
