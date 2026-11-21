@@ -6,12 +6,13 @@ Auteur : Prenom Nom, groupe MDW32.
 
 Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication : pages publiques, back-office authentifié, API JSON et tests Pest. Chaque session se termine par un tag Git (`lab-01`, `lab-01b`, puis un tag par session).
 
-## État actuel (tag lab-04b)
+## État actuel (tag lab-05)
 
-- Formulaires d'article : catégorie (liste déroulante) et tags (cases à cocher, synchronisés avec `sync()`).
-- Pages publiques par catégorie et par tag, liées par slug (`{category:slug}`, `{tag:slug}`).
-- Accueil : catégories et tags populaires comptés avec `withCount`, articles publiés seulement.
-- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest` et `PostTaxonomyTest`.
+- Validation des articles déplacée dans `StorePostRequest` et `UpdatePostRequest` (`$request->validated()`, slug unique avec `Rule::unique()->ignore()`).
+- Messages flash après chaque écriture (création, modification, suppression, publication), affichés une seule fois par le layout.
+- Middleware `EnsureSiteIsWritable` (alias `writable`) : avec `SITE_READ_ONLY=true`, toute écriture renvoie 503 et un bandeau prévient le visiteur.
+- Page 404 « Article introuvable » sur mesure (callback `render` dans `bootstrap/app.php`), avec les articles récents.
+- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest` et `PostFeedbackTest`.
 
 ## Routes disponibles
 
@@ -107,3 +108,9 @@ Ouvrir ensuite http://localhost:8000 (adresse de l'application, différente de l
 ![Formulaire de modification avec la catégorie et les tags](screenshots/s08-formulaire-relations.png)
 
 ![Page des articles d'une catégorie](screenshots/s08-page-categorie.png)
+
+### Session 09
+
+![Message flash après la création d'un article](screenshots/s09-message-flash.png)
+
+![Page Article introuvable avec les articles récents](screenshots/s09-article-introuvable.png)
