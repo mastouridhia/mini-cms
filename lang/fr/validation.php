@@ -111,6 +111,8 @@ return [
         'title' => 'titre',
         'excerpt' => 'extrait',
         'body' => 'contenu',
+        'category' => 'catégorie',
+        'tag' => 'tag',
         'is_published' => 'publié',
         'category_id' => 'catégorie',
         'tags' => 'tags',
