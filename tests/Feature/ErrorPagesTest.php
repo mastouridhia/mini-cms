@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Post;
 use App\Models\User;
 
 beforeEach(function () {
@@ -24,8 +25,10 @@ it('shows the styled 503 page with the read-only message', function () {
 });
 
 it('shows the styled 403 page in French', function () {
+    $post = Post::factory()->for(User::factory())->create();
+
     $this->actingAs(User::factory()->create())
-        ->get(route('admin.categories.index'))
+        ->get(route('posts.edit', $post))
         ->assertForbidden()
         ->assertSee('Accès refusé')
         ->assertSee("Vous n'avez pas le droit d'effectuer cette action.");
