@@ -115,6 +115,8 @@ return [
         'category_id' => 'catégorie',
         'tags' => 'tags',
         'tags.*' => 'tag',
+        'email' => 'adresse e-mail',
+        'password' => 'mot de passe',
     ],
 
 ];
