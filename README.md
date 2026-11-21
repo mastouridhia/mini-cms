@@ -6,13 +6,14 @@ Auteur : Prenom Nom, groupe MDW32.
 
 Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication : pages publiques, back-office authentifié, API JSON et tests Pest. Chaque session se termine par un tag Git (`lab-01`, `lab-01b`, puis un tag par session).
 
-## État actuel (tag lab-07)
+## État actuel (tag lab-08)
 
-- API installée avec `php artisan install:api` (Laravel Sanctum, `routes/api.php`, table `personal_access_tokens`).
-- Endpoints publics en lecture : `GET /api/posts` (articles publiés, paginés, `per_page` de 1 à 50) et `GET /api/posts/{post}`.
-- Réponses formatées par `PostResource` et `CategoryResource` : dates ISO 8601, relations avec `whenLoaded`, aucun champ sensible (`email`, `role`, `user_id`).
-- Erreurs JSON : 404 (article inconnu), 403 (brouillon, via `PostPolicy`), 422 en français (`IndexPostRequest`).
-- Défi : clé `tags` dans chaque article, clé `body` seulement sur la page d'un article.
+- API des catégories : `GET /api/categories` (avec `posts_count`, articles publiés seulement) et `GET /api/categories/{category}`.
+- Filtres `?category=<slug>` et `?tag=<slug>` sur `GET /api/posts` (slug inconnu : 422 en français, `links.next` garde les filtres).
+- Jetons Sanctum : `POST /api/login` (201 + jeton), `POST /api/logout` (204, jeton révoqué).
+- Écritures protégées par `auth:sanctum` : `POST`, `PUT`, `DELETE /api/posts`, avec les mêmes Form Requests et la même `PostPolicy` que le site (401, 403, 422 en JSON).
+- Tests Pest : `ApiReadTest` (5 tests) et `ApiWriteTest` (8 tests).
+- Défi : collection Postman `docs/postman/mini-cms.postman_collection.json` (le jeton est enregistré automatiquement, aucun jeton dans le fichier).
 
 ## Comptes de test
 
@@ -61,6 +62,13 @@ Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication 
 | PATCH | `/admin/utilisateurs/{user}/role` | `admin.users.role` | `UserController@updateRole` |
 | GET | `/api/posts` | `api.posts.index` | `Api\PostController@index` |
 | GET | `/api/posts/{post}` | `api.posts.show` | `Api\PostController@show` |
+| GET | `/api/categories` | `api.categories.index` | `Api\CategoryController@index` |
+| GET | `/api/categories/{category}` | `api.categories.show` | `Api\CategoryController@show` |
+| POST | `/api/login` | `api.login` | `Api\AuthController@login` |
+| POST | `/api/logout` | `api.logout` | `Api\AuthController@logout` |
+| POST | `/api/posts` | `api.posts.store` | `Api\PostController@store` |
+| PUT | `/api/posts/{post}` | `api.posts.update` | `Api\PostController@update` |
+| DELETE | `/api/posts/{post}` | `api.posts.destroy` | `Api\PostController@destroy` |
 
 ## Comparaison avec le starter kit Livewire
 
@@ -188,3 +196,9 @@ Ouvrir ensuite http://localhost:8000 (adresse de l'application, différente de l
 ![GET /api/posts?per_page=2 : data, links et meta](screenshots/s13-postman-liste.png)
 
 ![GET /api/posts?per_page=500 : erreur 422 en français](screenshots/s13-postman-422.png)
+
+### Session 14
+
+![POST /api/posts avec un jeton Bearer : 201](screenshots/s14-postman-201.png)
+
+![PUT sur l'article d'un autre auteur : 403](screenshots/s14-postman-403.png)
