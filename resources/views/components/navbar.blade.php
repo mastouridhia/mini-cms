@@ -11,6 +11,7 @@
         @endcan
         @auth
             <x-nav-link to="admin.tags.index" match="admin.tags.*">Tags</x-nav-link>
+            <x-nav-link to="my-posts">Mes articles</x-nav-link>
         @endauth
 
         <div class="ml-auto flex items-center gap-2">
