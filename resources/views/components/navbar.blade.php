@@ -6,8 +6,12 @@
         <x-nav-link to="posts.index" match="posts.*">Articles</x-nav-link>
         <x-nav-link to="time">Heure</x-nav-link>
         <x-nav-link to="about">À propos</x-nav-link>
-        <x-nav-link to="admin.categories.index" match="admin.categories.*">Catégories</x-nav-link>
-        <x-nav-link to="admin.tags.index" match="admin.tags.*">Tags</x-nav-link>
+        @can('manage-categories')
+            <x-nav-link to="admin.categories.index" match="admin.categories.*">Catégories</x-nav-link>
+        @endcan
+        @auth
+            <x-nav-link to="admin.tags.index" match="admin.tags.*">Tags</x-nav-link>
+        @endauth
 
         <div class="ml-auto flex items-center gap-2">
             @auth
