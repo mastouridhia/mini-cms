@@ -22,3 +22,11 @@ it('shows the styled 503 page with the read-only message', function () {
         ->assertSee('Service indisponible')
         ->assertSee('Le site est en lecture seule pour le moment.');
 });
+
+it('shows the styled 403 page in French', function () {
+    $this->actingAs(User::factory()->create())
+        ->get(route('admin.categories.index'))
+        ->assertForbidden()
+        ->assertSee('Accès refusé')
+        ->assertSee("Vous n'avez pas le droit d'effectuer cette action.", false);
+});
