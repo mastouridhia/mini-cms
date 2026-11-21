@@ -1,0 +1,201 @@
+{
+  "info": {
+    "name": "Mini-CMS API",
+    "_postman_id": "8f6d3c1e-5b2a-4f7e-9c1d-2a6b4e8f0c11",
+    "description": "Collection de la session 14 : connexion, liste, création et déconnexion. Le jeton est enregistré automatiquement dans la variable token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Connexion",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Jeton reçu (201)', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.collectionVariables.set('token', pm.response.json().token);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Articles",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/posts?per_page=2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "per_page",
+              "value": "2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Créer un article",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Article créé (201)', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Article Postman\",\n  \"slug\": \"article-postman-{{$timestamp}}\",\n  \"body\": \"Contenu envoy\\u00e9 depuis la collection Postman.\",\n  \"is_published\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/posts",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "posts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Déconnexion",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Jeton révoqué (204)', function () {",
+              "    pm.response.to.have.status(204);",
+              "});",
+              "pm.collectionVariables.set('token', '');"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/logout",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "logout"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
