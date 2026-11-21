@@ -117,6 +117,7 @@ return [
         'tags.*' => 'tag',
         'email' => 'adresse e-mail',
         'password' => 'mot de passe',
+        'per_page' => 'nombre par page',
     ],
 
 ];
