@@ -6,5 +6,6 @@
         <x-nav-link to="posts.index" match="posts.*">Articles</x-nav-link>
         <x-nav-link to="time">Heure</x-nav-link>
         <x-nav-link to="about">À propos</x-nav-link>
+        <x-nav-link to="admin.categories.index" match="admin.categories.*">Catégories</x-nav-link>
     </nav>
 </header>
